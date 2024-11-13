@@ -1,0 +1,17 @@
+Actual Traveling Salesman Problems Are More Complex
+
+The edge weight in a graph in this context of The Traveling Salesman Problem tells us how hard it is to go from one point to another, and it is the total edge weight of a route we want to minimize.
+
+So far on this page, the edge weight has been the distance in a straight line between two points. And that makes it much easier to explain the Traveling Salesman Problem, and to display it.
+
+But in the real world there are many other things that affects the edge weight:
+
+    Obstacles: When moving from one place to another, we normally try to avoid obstacles like trees, rivers, houses for example. This means it is longer and takes more time to go from A to B, and the edge weight value needs to be increased to factor that in, because it is not a straight line anymore.
+    Transportation Networks: We usually follow a road or use public transport systems when traveling, and that also affects how hard it is to go (or send a package) from one place to another.
+    Traffic Conditions: Travel congestion also affects the travel time, so that should also be reflected in the edge weight value.
+    Legal and Political Boundaries: Crossing border for example, might make one route harder to choose than another, which means the shortest straight line route might be slower, or more costly.
+    Economic Factors: Using fuel, using the time of employees, maintaining vehicles, all these things cost money and should also be factored into the edge weights.
+
+As you can see, just using the straight line distances as the edge weights, might be too simple compared to the real problem. And solving the Traveling Salesman Problem for such a simplified problem model would probably give us a solution that is not optimal in a practical sense.
+
+It is not easy to visualize a Traveling Salesman Problem when the edge length is not just the straight line distance between two points anymore, but the computer handles that very well.
