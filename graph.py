@@ -32,17 +32,27 @@ for i in range(num_vertices):
     cols = st.columns(num_vertices)
     for j in range(num_vertices):
         if i == j:
+            # Diagonal cells are always zero
             cols[j].markdown(
                 f"<div class='matrix-cell matrix-cell-gray'>0</div>", 
                 unsafe_allow_html=True
             )
             matrix[i, j] = 0
-        else:
+        elif i < j:
+            # Upper triangle input
             matrix[i, j] = cols[j].number_input(
                 f"Weight ({i}, {j})", 
                 min_value=0, 
                 value=int(matrix[i, j]), 
                 label_visibility="collapsed"
+            )
+            # Mirror the value to the lower triangle
+            matrix[j, i] = matrix[i, j]
+        else:
+            # Lower triangle: Display mirrored value
+            cols[j].markdown(
+                f"<div class='matrix-cell matrix-cell-gray'>{matrix[i, j]}</div>", 
+                unsafe_allow_html=True
             )
 
 graph = nx.Graph()
@@ -53,7 +63,7 @@ if st.button("Generate Graph"):
                 graph.add_edge(i, j, weight=matrix[i, j])
 
     fig, ax = plt.subplots(figsize=(8, 8))
-    pos = nx.spring_layout(graph)  
+    pos = nx.spring_layout(graph)
 
     nx.draw(graph, pos, ax=ax, node_color='lightblue', edge_color='gray', with_labels=True)
 
@@ -61,6 +71,3 @@ if st.button("Generate Graph"):
     nx.draw_networkx_edge_labels(graph, pos, edge_labels=edge_labels)
 
     st.pyplot(fig)
-    
-if st.button("Genereate Graph")
-    
