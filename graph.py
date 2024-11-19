@@ -18,7 +18,7 @@ for i in range(num_vertices):
             matrix[i, j] = 0
         elif i < j:
             matrix[i, j] = cols[j].number_input(f"Weight ({i}, {j})", min_value=0, value=0, label_visibility="collapsed")
-            matrix[j, i] = matrix[i, j] 
+            matrix[j, i] = matrix[i, j]
         else:
             cols[j].markdown(f"<div style='text-align: center;'>{matrix[i, j]}</div>", unsafe_allow_html=True)
 
@@ -58,7 +58,6 @@ if st.button("Find Hamiltonian Circuits"):
     st.write(f"Hamiltonian Circuits starting from vertex {start_vertex}:")
 
     paths_and_costs = []
-    
     for circuit in circuits:
         total_cost = sum(matrix[circuit[i], circuit[i + 1]] for i in range(len(circuit) - 1))
         paths_and_costs.append({"Path": " -> ".join(map(str, circuit)), "Total Cost": total_cost})
@@ -68,8 +67,8 @@ if st.button("Find Hamiltonian Circuits"):
     graph = nx.from_numpy_array(matrix)
     pos = nx.spring_layout(graph)
 
+    # Animation for all paths
     fig, ax = plt.subplots(figsize=(8, 8))
-
     def update(num):
         ax.clear()
         nx.draw(graph, pos, ax=ax, node_color='lightblue', edge_color='gray', with_labels=True)
@@ -88,5 +87,24 @@ if st.button("Find Hamiltonian Circuits"):
 
     ani = FuncAnimation(fig, update, frames=len(circuits), interval=2000, repeat=True)
     ani.save(".hamiltonian_circuits.gif", writer='imagemagick')
-    
     st.image(".hamiltonian_circuits.gif", caption="Hamiltonian Circuits Animation", use_container_width=True)
+
+    # Shortest Hamiltonian Circuit
+    if circuits:
+        shortest_circuit = min(paths_and_costs, key=lambda x: x["Total Cost"])
+        st.subheader("Shortest Hamiltonian Circuit")
+        st.write(f"Path: {shortest_circuit['Path']}")
+        st.write(f"Total Cost: {shortest_circuit['Total Cost']}")
+
+        fig2, ax2 = plt.subplots(figsize=(8, 8))
+        shortest_path = list(map(int, shortest_circuit["Path"].split(" -> ")))
+        edges = [(shortest_path[i], shortest_path[i + 1]) for i in range(len(shortest_path) - 1)]
+        
+        nx.draw(graph, pos, ax=ax2, node_color='lightgreen', edge_color='gray', with_labels=True)
+        nx.draw_networkx_nodes(graph, pos, nodelist=shortest_path, node_color='red', ax=ax2)
+        nx.draw_networkx_edges(graph, pos, edgelist=edges, edge_color='green', width=2, ax=ax2)
+
+        edge_labels = {(u, v): matrix[u, v] for u, v in edges}
+        nx.draw_networkx_edge_labels(graph, pos, edge_labels=edge_labels, ax=ax2)
+        ax2.set_title(f"Shortest Path: {shortest_circuit['Path']} (Cost: {shortest_circuit['Total Cost']})")
+        st.pyplot(fig2)
